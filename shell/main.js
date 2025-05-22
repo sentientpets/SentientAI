@@ -19,6 +19,7 @@ const createWindow = () => {
 const createTray = () => {
   // Icon is embedded as base64 to avoid bundling binary assets.
   // Regenerate with `node scripts/generate-icon.js <path/to/icon.png>`
+  // or using `python3 generate_icon.py` - see README for instructions.
   const iconDataUrl =
     'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAADElEQVQI12P4//8/AzUAAR0MAqLvUIwAAAAASUVORK5CYII=';
   const icon = nativeImage.createFromDataURL(iconDataUrl);
@@ -52,5 +53,7 @@ app.whenReady().then(() => {
 });
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') app.quit();
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
 });
