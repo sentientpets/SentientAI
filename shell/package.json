@@ -1,0 +1,9 @@
+{
+  "name": "sentient-shell",
+  "version": "0.1.0",
+  "description": "Electron front-end for Sentient",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron ."
+  }
+}
