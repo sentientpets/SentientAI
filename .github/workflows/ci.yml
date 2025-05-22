@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/pypoetry
+          key: poetry-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
+          restore-keys: poetry-${{ runner.os }}-
+      - uses: actions/cache@v3
+        with:
+          path: |
+            shell/node_modules
+          key: node-${{ runner.os }}-${{ hashFiles('shell/package-lock.json') }}
+          restore-keys: node-${{ runner.os }}-
+      - uses: abatilo/actions-poetry@v2
+      - name: Install dependencies
+        run: |
+          cd engine
+          poetry install --no-dev
+      - name: Run tests
+        run: |
+          cd engine
+          poetry run pytest --cov=sentient --cov-fail-under=85
+      - name: Build Electron DMG
+        if: ${{ hashFiles('shell/package.json') != '' }}
+        run: |
+          cd shell
+          npm install
+          npx electron-builder --mac --publish never
+      - name: Upload DMG
+        if: ${{ hashFiles('shell/package.json') != '' }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: dmg
+          path: shell/dist/*.dmg
