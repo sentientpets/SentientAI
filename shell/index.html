@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sentient Shell</title>
+  </head>
+  <body>
+    <h1>Sentient Shell</h1>
+    <pre id="health">Checking...</pre>
+    <script>
+      window.api.pingHealth().then((res) => {
+        document.getElementById('health').innerText = res || 'Error';
+      });
+    </script>
+  </body>
+</html>
